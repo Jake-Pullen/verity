@@ -1,0 +1,50 @@
+database_name: verity
+tables:
+  - table_name: budget
+    table_columns:
+      - column_name: id
+        is_pk: True
+        datatype: INT
+        nullable: False
+      - column_name: name
+        is_pk: False
+        datatype: str
+        nullable: False
+      - column_name: created_date
+        is_pk: False
+        datatype: datetime
+        nullable: False
+  - table_name: account_types
+    table_columns:
+      - column_name: id
+        is_pk: True
+        datatype: INT
+        nullable: False
+      - column_name: name
+        is_pk: False
+        datatype: str
+        nullable: False
+      - column_name: created_date
+        is_pk: False
+        datatype: datetime
+        nullable: False
+  - table_name: account
+    table_columns:
+      - column_name: id
+        is_pk: True
+        datatype: INT
+        nullable: False
+      - column_name: name
+        is_pk: False
+        datatype: INT
+        nullable: False
+      - column_name: budget_id
+        is_pk: False
+        datatype: INT
+        is_fk: budget.id
+        nullable: False
+      - column_name: account_type
+        is_pk: False
+        datatype: INT
+        is_fk: account_types.id
+        nullable: False

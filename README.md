@@ -2,9 +2,12 @@
 
 ## Budget | Forecast | Financial Plan
 
+### A Web based application to allow you to input financial transactions, in turn allowing you to budget, forecast and plan your money.
+
 ### Initial Goals and MVP
 
 Quick overview of MVP:
+
 (MVP completion will be considered the 0.1.0 Release, untill then we are Alpha and sprint counting.)
 
 1. Local First to ensure security, it is your finances at the end of the day
@@ -35,7 +38,7 @@ Quick overview of MVP:
 
 ## Acceptance Criteria
 
-### To be concidered a MVP success we must achieve;
+### To be considered a MVP success we must achieve;
 
 * [ ] **High Test Coverage (80% +)**
 * [ ] **Budget Creation:**
