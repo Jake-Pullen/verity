@@ -1,5 +1,9 @@
 # verity additions
 logs/
+*.db
+**/*.db-wal
+**/*.db-shm
+**/*-wal
 
 # Python-generated files
 __pycache__/
