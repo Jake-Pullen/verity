@@ -1,6 +1,8 @@
 import limbo
 import yaml
+import logging
 
+logger = logging.getLogger('Verity')
 
 class database():
     'basic Database class to start some development'
@@ -42,31 +44,31 @@ class database():
         #     for key in table['table_foreign_keys']:
         #         sql += f'\n{build_foreign_key(key)},'
         sql += '\n);'
-        # print(sql)
+        # logger.info(sql)
         success_status = False
         try:
             connection = limbo.connect(self.database)
             cursor = connection.cursor()
             response = cursor.execute(sql).fetchall()
-            print(response) # TODO: Check this, hopefully we get a success response
+            logger.info(response) # TODO: Check this, hopefully we get a success response
             if response == 'Success':
                 success_status = True
         except limbo.ProgrammingError as pe:
-            print(pe)
+            logger.error(pe)
         except limbo.OperationalError as oe:
-            print(oe)
+            logger.error(oe)
         except limbo.InterfaceError as ie:
-            print(ie)
+            logger.error(ie)
         finally:
             try:
                 connection.close()
             except Exception as e:
-                print(e)
+                logger.error(e)
             return success_status
 
     def build_database(self, schema):
         for table in schema['tables']:
-            print(table['table_name'])
+            logger.info(table['table_name'])
             self._add_table_to_db(table)
 
 
@@ -87,17 +89,17 @@ class database():
             cursor.execute(f"PRAGMA table_info({table_name})")
 
             # Print the schema
-            print(f"Schema for table: {table_name}")
+            logger.debug(f"Schema for table: {table_name}")
             for row in cursor.fetchall():
-                print(f"  Column Name: {row[1]}, Data Type: {row[2]}, Not Null: {row[3]}")
+                logger.debug(f"  Column Name: {row[1]}, Data Type: {row[2]}, Not Null: {row[3]}")
 
         except Exception as e:
-            print(f"An error occurred: {e}")
+            logger.error(f"An error occurred: {e}")
         finally:
             try:
                 connection.close()
             except Exception as e:
-                print(e)
+                logger.error(e)
 
     def check_database_exists(self):
         with open('docs/verity_schema.yaml') as f:
