@@ -2,19 +2,14 @@ import os
 import logging
 import logging.config
 import atexit
-import yaml
 
 from flask import Flask
 
 from data_handler import database
+from config import VerityConfig
 
-def set_up_logging():
-    with open('config/logging_config.yaml', 'r') as f:
-        try:
-            config = yaml.safe_load(f)
-        except yaml.YAMLError as e:
-            print(e)
-    logging.config.dictConfig(config)
+def set_up_logging(config):
+    logging.config.dictConfig(config.logging_config)
     queue_handler = logging.getHandlerByName('queue_handler')
     if queue_handler is not None:
         queue_handler.listener.start()
@@ -30,9 +25,10 @@ def hello_world():
     return '<h1>Hello World</h1>'
 
 if __name__ == "__main__":
+    config = VerityConfig()
     os.makedirs('logs', exist_ok=True)
-    set_up_logging()
+    set_up_logging(config)
     logger.info('app started')
-    verity = database()
-    verity.check_database_exists()
+    verity = database(config)
+    verity.build_database()
     app.run(debug=True)

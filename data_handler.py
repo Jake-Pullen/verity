@@ -2,13 +2,12 @@ import limbo
 import yaml
 import logging
 
-logger = logging.getLogger('Verity')
+logger = logging.getLogger(__name__)
 
 class database():
     'basic Database class to start some development'
-    def __init__(self) -> None:
-        self.database = 'verity.db'
-
+    def __init__(self, config) -> None:
+        self.database = config.DATABASE
 
     @staticmethod
     def _build_column(column:dict) -> str:
@@ -32,7 +31,7 @@ class database():
 
     def _add_table_to_db(self, table:dict) -> bool:
         'Creates the table in the verity database, based on the schema yaml'
-        sql = f'''CREATE TABLE {table['table_name']} (
+        sql = f'''CREATE TABLE IF NOT EXISTS {table['table_name']} (
         '''
         columns = []
         for column in table['table_columns']:
@@ -49,10 +48,8 @@ class database():
         try:
             connection = limbo.connect(self.database)
             cursor = connection.cursor()
-            response = cursor.execute(sql).fetchall()
-            logger.info(response) # TODO: Check this, hopefully we get a success response
-            if response == 'Success':
-                success_status = True
+            cursor.execute(sql)
+            success_status = True
         except limbo.ProgrammingError as pe:
             logger.error(pe)
         except limbo.OperationalError as oe:
@@ -66,9 +63,12 @@ class database():
                 logger.error(e)
             return success_status
 
-    def build_database(self, schema):
+    def build_database(self):
+        with open('docs/verity_schema.yaml') as f:
+            schema = yaml.safe_load(f)
         for table in schema['tables']:
-            logger.info(table['table_name'])
+            logger.info(f'Checking {table['table_name']}')
+            # add true false handling here to gracefully handle errors
             self._add_table_to_db(table)
 
 
@@ -100,18 +100,3 @@ class database():
                 connection.close()
             except Exception as e:
                 logger.error(e)
-
-    def check_database_exists(self):
-        with open('docs/verity_schema.yaml') as f:
-            schema = yaml.safe_load(f)
-        try:
-            connection = limbo.connect(self.database)
-            cursor = connection.cursor()
-            # do we want to check all the tables?
-            cursor.execute('select * from budget')
-        except limbo.ProgrammingError:
-            # table doesnt exist, so we need to build the database.
-            self.build_database(schema = schema)
-
-        for table in schema['tables']:
-            self.print_table_schema(table['table_name'])
