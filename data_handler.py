@@ -1,13 +1,14 @@
 import limbo
-import yaml
 import logging
+from config import VerityConfig
 
 logger = logging.getLogger(__name__)
 
 class database():
     'basic Database class to start some development'
-    def __init__(self, config) -> None:
+    def __init__(self, config: VerityConfig ) -> None:
         self.database = config.DATABASE
+        self.schema = config.DATABASE_SCHEMA
 
     @staticmethod
     def _build_column(column:dict) -> str:
@@ -23,7 +24,7 @@ class database():
         return column_string
 
     @staticmethod
-    def _build_foreign_key(key) -> str:
+    def _build_foreign_key(key:dict) -> str:
         column = key['column']
         reference_table = key['references']
         reference_column = key['reference_column']
@@ -64,9 +65,7 @@ class database():
             return success_status
 
     def build_database(self):
-        with open('docs/verity_schema.yaml') as f:
-            schema = yaml.safe_load(f)
-        for table in schema['tables']:
+        for table in self.schema['tables']:
             logger.info(f'Checking {table['table_name']}')
             # add true false handling here to gracefully handle errors
             self._add_table_to_db(table)
