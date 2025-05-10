@@ -138,20 +138,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pylimbo"
-version = "0.0.19"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "typing-extensions" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/1f/61/33898f919ed7fe1b21fbd0d257e40df9d0ed5cbd8cfa9001aa92f592d1b8/pylimbo-0.0.19.tar.gz", hash = "sha256:0af8b296b973d893acc5bb8131b42a8a61812c3bc9646152c512e286ffc45ed7", size = 548530, upload-time = "2025-04-16T12:30:38.012Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/ef/3a/845730fbb121e070b01db045b73a37a2191e54483f57a3490e7f3a7b3525/pylimbo-0.0.19-cp313-cp313-macosx_10_12_x86_64.whl", hash = "sha256:45098b9e51c86974fae83e13c7d01de2c4890d2ce430a529d2dd9321d11a64eb", size = 1661798, upload-time = "2025-04-16T12:30:26.905Z" },
-    { url = "https://files.pythonhosted.org/packages/4d/8b/74ee6ac1387aabdd6b53940123839ec4384f7d3604055b8180dd5ce66fdd/pylimbo-0.0.19-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:d3a7d741336eaecf69f03e31fae3baa0e80f734411f4f94d50e9694291b351a4", size = 1544491, upload-time = "2025-04-16T12:30:28.455Z" },
-    { url = "https://files.pythonhosted.org/packages/ef/14/a84b40b3d8801d36afced8db0f9caac4a7d001bd13a2cc6d71e4d1259aeb/pylimbo-0.0.19-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a9066f4aab0ddd3c44742ca6d8f549da860caf2edb8bd8d75c0c99f30dac9043", size = 4775272, upload-time = "2025-04-16T12:30:30.844Z" },
-]
-
-[[package]]
 name = "pyyaml"
 version = "6.0.2"
 source = { registry = "https://pypi.org/simple" }
@@ -184,15 +170,6 @@ wheels = [
 ]
 
 [[package]]
-name = "typing-extensions"
-version = "4.13.2"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/f6/37/23083fcd6e35492953e8d2aaaa68b860eb422b34627b13f2ce3eb6106061/typing_extensions-4.13.2.tar.gz", hash = "sha256:e6c81219bd689f51865d9e372991c540bda33a0379d5573cddb9a3a23f7caaef", size = 106967, upload-time = "2025-04-10T14:19:05.416Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/8b/54/b1ae86c0973cc6f0210b53d508ca3641fb6d0c56823f288d108bc7ab3cc8/typing_extensions-4.13.2-py3-none-any.whl", hash = "sha256:a439e7c04b49fec3e5d3e2beaa21755cadbbdc391694e28ccdd36ca4a1408f8c", size = 45806, upload-time = "2025-04-10T14:19:03.967Z" },
-]
-
-[[package]]
 name = "urllib3"
 version = "2.4.0"
 source = { registry = "https://pypi.org/simple" }
@@ -207,7 +184,6 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "flask" },
-    { name = "pylimbo" },
     { name = "pyyaml" },
     { name = "requests" },
 ]
@@ -215,7 +191,6 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "flask", specifier = ">=3.1.0" },
-    { name = "pylimbo", specifier = ">=0.0.19" },
     { name = "pyyaml", specifier = ">=6.0.2" },
     { name = "requests", specifier = ">=2.32.3" },
 ]

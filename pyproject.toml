@@ -6,7 +6,6 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "flask>=3.1.0",
-    "pylimbo>=0.0.19",
     "pyyaml>=6.0.2",
-    "requests>=2.32.3",
+    "requests>=2.32.3"
 ]
