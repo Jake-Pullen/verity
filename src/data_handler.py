@@ -94,6 +94,7 @@ class database():
 
         except Exception as e:
             logger.error(f"An error occurred: {e}")
+
         finally:
             try:
                 connection.close()

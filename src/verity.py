@@ -9,6 +9,7 @@ from data_handler import database
 from config import VerityConfig
 
 def set_up_logging(config):
+    os.makedirs('../logs', exist_ok=True)
     logging.config.dictConfig(config.logging_config)
     queue_handler = logging.getHandlerByName('queue_handler')
     if queue_handler is not None:
@@ -26,7 +27,6 @@ def hello_world():
 
 if __name__ == "__main__":
     config = VerityConfig()
-    os.makedirs('logs', exist_ok=True)
     set_up_logging(config)
     logger.info('app started')
     verity = database(config)
