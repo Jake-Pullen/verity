@@ -31,4 +31,5 @@ if __name__ == "__main__":
     logger.info('app started')
     verity = database(config)
     verity.build_database()
+    # temp comment for testing
     app.run(debug=True)
