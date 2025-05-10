@@ -7,7 +7,7 @@ class VerityConfig:
         self.SECRET_KEY = os.environ.get('SECRET_KEY') or 'super_secure_secret_key'
         self.DATABASE = 'Verity.db'
         self.CONFIG_FILE_DIRECTORY = 'config_files'
-        self.logging_config = self.load_config_file('logging_config.yaml')
+        self.LOGGING_CONFIG = self.load_config_file('logging_config.yaml')
         self.DATABASE_SCHEMA = self.load_config_file('verity_schema.yaml')
 
     def load_config_file(self, file):
