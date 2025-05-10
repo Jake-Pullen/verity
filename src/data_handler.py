@@ -61,7 +61,7 @@ class database():
                 connection.close()
             except Exception as e:
                 logger.error(e)
-        return success_status
+            return success_status
 
     def build_database(self):
         for table in self.schema['tables']:
