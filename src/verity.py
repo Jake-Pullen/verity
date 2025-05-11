@@ -29,9 +29,8 @@ if __name__ == "__main__":
     verity.build_database()
 
     # app initialise
-    app = Flask(__name__)
+    app = Flask('Verity', static_folder='./front/static/')
     app.config['SECRET_KEY'] = verity_config.SECRET_KEY
     app.config['DEBUG'] = True
-    app.config['STATIC_FOLDER'] = 'front/static'
     app.register_blueprint(home_bp)
     app.run()
