@@ -2,7 +2,6 @@ import sqlite3
 import logging
 from config import VerityConfig
 from datetime import datetime
-from posix import error
 
 logger = logging.getLogger(__name__)
 
@@ -105,24 +104,32 @@ class database():
         'takes budget name string, returns budget id'
         now = datetime.now()
         formatted_datetime = now.strftime("%Y-%m-%d %H:%M:%S")
-        logger.debug(f'current datetime: {formatted_datetime}')
+        logger.debug(f'attempting to insert values into budget table {budget_name} | {formatted_datetime}')
         try:
             connection = sqlite3.connect(self.database)
+            logger.debug('connection to db open')
             cursor = connection.cursor()
+            logger.debug('cursor activated')
             cursor.execute('''INSERT INTO budget (
             name,
             created_date
             )
             VALUES (?,?)
             ''',(budget_name, formatted_datetime))
+            logger.debug('cursor executed')
             budget_id = cursor.lastrowid
+            logger.debug(f'insert attempt seems successful, budget id is {budget_id}')
 
+            if budget_id is None:
+                budget_id = 0
         except Exception as e:
-            logger.error(e)
+            logger.error(f'Failed to insert budget name, error: {e}')
+            budget_id = 0
         finally:
             try:
                 connection.close()
+                logger.debug('connection to db closed')
                 return budget_id
             except Exception as e:
-                logger.error(e)
+                logger.error(f'failed to close connection message: {e}')
                 return 0
