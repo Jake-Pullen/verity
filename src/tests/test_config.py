@@ -1,4 +1,3 @@
-import pytest
 from src import config
 import os
 import yaml
