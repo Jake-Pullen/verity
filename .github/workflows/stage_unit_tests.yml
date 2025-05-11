@@ -21,7 +21,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ".python-version"
+          python-version-file: ".python-version"
 
       - name: Install dependancies
         run: uv sync --locked --all-extras --dev
@@ -30,4 +30,5 @@ jobs:
         run: uv run ruff check
 
       - name: Run Unit Tests
+        working-directory: ./src
         run: uv run pytest
