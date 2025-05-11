@@ -11,7 +11,8 @@ Quick overview of MVP:
 (MVP completion will be considered the 0.1.0 Release, untill then we are Alpha and sprint counting.)
 
 1. Local First to ensure security, it is your finances at the end of the day
-1. Stored in a local pylimbo database (sqlite in rust)
+1. ~~Stored in a local pylimbo database (sqlite in rust)~~
+1. Stored in a local sqlite database
 1. Easily distributable. any PC should be able to clone and run with no extra steps.
 1. Docker later, not part of MVP but should build with the plan to dockerise
 1. Test driven development - each class / method should have unit testing and integration testing.
@@ -25,10 +26,11 @@ Quick overview of MVP:
 ## Constraints
 
 * **Rust-First Tooling:**  Where possible, we will leverage Rust-built tools for development, testing, and build processes.  This includes, but is not limited to:
-  * **Limbo:** database - sqlite replacement.
+  ~~* **Limbo:** database - sqlite replacement.~~
   * **Ruff:**  code formatter.
   * **UV:**  Package management and virtual environment handler.
-* **Database:** Limbo. Chosen for the previous Rust constraint and also performance
+  * **Pydantic:** Data Validation Tool
+* **Database:** ~~Limbo. Chosen for the previous Rust constraint and also performance~~
 * **Security Focus:**
   * Input validation on all user inputs.
   * Local first development ideal, Later we can add self host capability.
@@ -74,3 +76,15 @@ Quick overview of MVP:
 * Investment tracking and analysis.
 * Containerisation via Docker for easier more efficient distribution
 * Self-Hosting capable for access on devices outside of own network
+
+## Contribution Guidelines
+
+### Ensure you have [uv installed](https://docs.astral.sh/uv/getting-started/installation/)
+
+1. **Fork the Repository:** Create your own fork of the Verity project repository.
+1. **Create a Branch:**  Create a new branch for your changes (e.g., `feature/new-feature`, `fix/bug-name`).
+1. **Run uv sync** To ensure dependancies are installed and you are ready to go
+1. **Follow Code Style:**  Please adhere to our coding standards (We are using Ruff)
+1. **Write Clear Commit Messages:**  Use descriptive commit messages to explain the purpose of your changes.
+1. **Test Thoroughly:**  Ensure your changes are well-tested, including adding new tests where appropriate.  *Especially remember to add the new tests in `src/tests/test_*.py`.*
+1. **Submit a Pull Request:** Once you’ve finished your work, submit a pull request to the stage branch in the Verity project repository.  We’ll review your changes and provide feedback.
