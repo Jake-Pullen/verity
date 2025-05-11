@@ -1,14 +1,17 @@
 import sqlite3
 import logging
 from config import VerityConfig
+from datetime import datetime
+from posix import error
 
 logger = logging.getLogger(__name__)
 
 class database():
     'basic Database class to start some development'
-    def __init__(self, config: VerityConfig ) -> None:
-        self.database = config.DATABASE
-        self.schema = config.DATABASE_SCHEMA
+    def __init__(self) -> None:
+        self.verity_config = VerityConfig()
+        self.database = self.verity_config.DATABASE
+        self.schema = self.verity_config.DATABASE_SCHEMA
 
     @staticmethod
     def _build_column(column:dict) -> str:
@@ -97,3 +100,29 @@ class database():
                 connection.close()
             except Exception as e:
                 logger.error(e)
+
+    def add_budget_name(self,budget_name:str) -> int:
+        'takes budget name string, returns budget id'
+        now = datetime.now()
+        formatted_datetime = now.strftime("%Y-%m-%d %H:%M:%S")
+        logger.debug(f'current datetime: {formatted_datetime}')
+        try:
+            connection = sqlite3.connect(self.database)
+            cursor = connection.cursor()
+            cursor.execute('''INSERT INTO budget (
+            name,
+            created_date
+            )
+            VALUES (?,?)
+            ''',(budget_name, formatted_datetime))
+            budget_id = cursor.lastrowid
+
+        except Exception as e:
+            logger.error(e)
+        finally:
+            try:
+                connection.close()
+                return budget_id
+            except Exception as e:
+                logger.error(e)
+                return 0
