@@ -13,9 +13,13 @@ class VerityConfig:
     def load_config_file(self, file):
         config = ''
         filepath = os.path.join(self.CONFIG_FILE_DIRECTORY,file)
-        with open(filepath, 'r') as f:
-            try:
-                config = yaml.safe_load(f)
-            except yaml.YAMLError as e:
-                print(e)
-        return config
+        try:
+            with open(filepath, 'r') as f:
+                try:
+                    config = yaml.safe_load(f)
+                except yaml.YAMLError as e:
+                    print(e)
+                    return yaml.YAMLError
+            return config
+        except FileNotFoundError:
+            raise FileNotFoundError
