@@ -5,46 +5,50 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
-class database():
-    'basic Database class to start some development'
+
+class database:
+    "basic Database class to start some development"
+
     def __init__(self) -> None:
         self.verity_config = VerityConfig()
         self.database = self.verity_config.DATABASE
         self.schema = self.verity_config.DATABASE_SCHEMA
 
     @staticmethod
-    def _build_column(column:dict) -> str:
-        name = column['column_name']
-        is_pk = column['is_pk']
-        datatype = column['datatype']
-        nullable = column['nullable']
-        column_string = f'{name} {datatype}'
+    def _build_column(column: dict) -> str:
+        name = column["column_name"]
+        is_pk = column["is_pk"]
+        datatype = column["datatype"]
+        nullable = column["nullable"]
+        column_string = f"{name} {datatype}"
         if is_pk:
-            column_string += ' PRIMARY KEY AUTOINCREMENT'
+            column_string += " PRIMARY KEY AUTOINCREMENT"
         if not nullable:
-            column_string += ' NOT NULL'
+            column_string += " NOT NULL"
         return column_string
 
     @staticmethod
-    def _build_foreign_key(key:dict) -> str:
-        column = key['column']
-        reference_table = key['references']
-        reference_column = key['reference_column']
-        return f'FOREIGN KEY ({column}) REFERENCES {reference_table} ({reference_column})'
+    def _build_foreign_key(key: dict) -> str:
+        column = key["column"]
+        reference_table = key["references"]
+        reference_column = key["reference_column"]
+        return (
+            f"FOREIGN KEY ({column}) REFERENCES {reference_table} ({reference_column})"
+        )
 
-    def _add_table_to_db(self, table:dict) -> bool:
-        'Creates the table in the verity database, based on the schema yaml'
-        sql = f'''CREATE TABLE IF NOT EXISTS {table['table_name']} (
-        '''
+    def _add_table_to_db(self, table: dict) -> bool:
+        "Creates the table in the verity database, based on the schema yaml"
+        sql = f"""CREATE TABLE IF NOT EXISTS {table["table_name"]} (
+        """
         columns = []
-        for column in table['table_columns']:
+        for column in table["table_columns"]:
             columns.append(self._build_column(column))
-        sql += ',\n'.join(columns)
-        if table.get('table_foreign_keys', None):
-            sql += ',\n'
-            for key in table['table_foreign_keys']:
-                sql += f'{self._build_foreign_key(key)}'
-        sql += '\n);'
+        sql += ",\n".join(columns)
+        if table.get("table_foreign_keys", None):
+            sql += ",\n"
+            for key in table["table_foreign_keys"]:
+                sql += f"{self._build_foreign_key(key)}"
+        sql += "\n);"
         success_status = False
         try:
             connection = sqlite3.connect(self.database)
@@ -66,7 +70,7 @@ class database():
             return success_status
 
     def build_database(self):
-        for table in self.schema['tables']:
+        for table in self.schema["tables"]:
             logger.info(f"Checking {table['table_name']}")
             # Add true/false handling here to gracefully handle errors
             self._add_table_to_db(table)
@@ -89,7 +93,9 @@ class database():
             # Print the schema
             logger.debug(f"Schema for table: {table_name}")
             for row in cursor.fetchall():
-                logger.debug(f"  Column Name: {row[1]}, Data Type: {row[2]}, Not Null: {row[3]}")
+                logger.debug(
+                    f"  Column Name: {row[1]}, Data Type: {row[2]}, Not Null: {row[3]}"
+                )
 
         except Exception as e:
             logger.error(f"An error occurred: {e}")
@@ -100,36 +106,42 @@ class database():
             except Exception as e:
                 logger.error(e)
 
-    def add_budget_name(self,budget_name:str) -> int:
-        'takes budget name string, returns budget id'
+    def add_budget_name(self, budget_name: str) -> int:
+        "takes budget name string, returns budget id"
         now = datetime.now()
         formatted_datetime = now.strftime("%Y-%m-%d %H:%M:%S")
-        logger.debug(f'attempting to insert values into budget table {budget_name} | {formatted_datetime}')
+        logger.debug(
+            f"attempting to insert values into budget table {budget_name} | {formatted_datetime}"
+        )
         try:
             connection = sqlite3.connect(self.database)
-            logger.debug('connection to db open')
+            logger.debug("connection to db open")
             cursor = connection.cursor()
-            logger.debug('cursor activated')
-            cursor.execute('''INSERT INTO budget (
+            logger.debug("cursor activated")
+            cursor.execute(
+                """INSERT INTO budget (
             name,
             created_date
             )
             VALUES (?,?)
-            ''',(budget_name, formatted_datetime))
-            logger.debug('cursor executed')
+            """,
+                (budget_name, formatted_datetime),
+            )
+            logger.debug("cursor executed")
+            connection.commit()
             budget_id = cursor.lastrowid
-            logger.debug(f'insert attempt seems successful, budget id is {budget_id}')
+            logger.debug(f"insert attempt seems successful, budget id is {budget_id}")
 
             if budget_id is None:
                 budget_id = 0
         except Exception as e:
-            logger.error(f'Failed to insert budget name, error: {e}')
+            logger.error(f"Failed to insert budget name, error: {e}")
             budget_id = 0
         finally:
             try:
                 connection.close()
-                logger.debug('connection to db closed')
+                logger.debug("connection to db closed")
                 return budget_id
             except Exception as e:
-                logger.error(f'failed to close connection message: {e}')
+                logger.error(f"failed to close connection message: {e}")
                 return 0
