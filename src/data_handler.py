@@ -14,6 +14,30 @@ class database:
         self.database = self.verity_config.DATABASE
         self.schema = self.verity_config.DATABASE_SCHEMA
 
+    def execute_sql(self, sql_statement: str, return_id: bool = False) -> (bool, int):
+        "send the query here, returns true if successful, false if fail"
+        logging.debug(f"received request to execute {sql_statement}")
+        new_id: int = 0
+        is_success: bool = False
+        try:
+            connection = sqlite3.connect(
+                database=self.database,
+                timeout=10,  # seconds i hope
+            )
+            logging.debug("opened connection to database")
+            cursor = connection.cursor()
+            cursor.execute(sql=sql_statement)
+            connection.commit()
+            if return_id:
+                new_id = cursor.lastrowid
+            is_success = True
+        except Exception as e:  # TODO: better Exception handling
+            logging.error(e)
+            is_success = False
+        finally:
+            connection.close()
+            return (is_success, new_id)
+
     @staticmethod
     def _build_column(column: dict) -> str:
         name = column["column_name"]
@@ -30,11 +54,9 @@ class database:
     @staticmethod
     def _build_foreign_key(key: dict) -> str:
         column = key["column"]
-        reference_table = key["references"]
-        reference_column = key["reference_column"]
-        return (
-            f"FOREIGN KEY ({column}) REFERENCES {reference_table} ({reference_column})"
-        )
+        ref_table = key["references"]
+        ref_column = key["reference_column"]
+        return f"FOREIGN KEY ({column}) REFERENCES {ref_table} ({ref_column})"
 
     def _add_table_to_db(self, table: dict) -> bool:
         "Creates the table in the verity database, based on the schema yaml"
@@ -77,7 +99,8 @@ class database:
 
     def print_table_schema(self, table_name):
         """
-        Connects to the sqlite3 database, retrieves the schema of a specified table,
+        Connects to the sqlite3 database,
+        retrieves the schema of a specified table,
         and prints it to the console.
 
         Args:
@@ -94,7 +117,7 @@ class database:
             logger.debug(f"Schema for table: {table_name}")
             for row in cursor.fetchall():
                 logger.debug(
-                    f"  Column Name: {row[1]}, Data Type: {row[2]}, Not Null: {row[3]}"
+                    f"Column Name: {row[1]}, Data Type: {row[2]}, Not Null: {row[3]}"
                 )
 
         except Exception as e:
@@ -111,7 +134,9 @@ class database:
         now = datetime.now()
         formatted_datetime = now.strftime("%Y-%m-%d %H:%M:%S")
         logger.debug(
-            f"attempting to insert values into budget table {budget_name} | {formatted_datetime}"
+            f"attempting to insert values into budget table {budget_name} | {
+                formatted_datetime
+            }"
         )
         try:
             connection = sqlite3.connect(self.database)
