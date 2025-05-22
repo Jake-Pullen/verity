@@ -2,7 +2,7 @@ name: Unit Tests - Stage Branch
 
 on:
   pull_request:
-    types: [opened , reopened]
+    types: [opened , reopene, edited]
     branches:
       - 'stage'
 
