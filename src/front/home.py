@@ -12,7 +12,9 @@ home_bp = Blueprint("home", __name__, template_folder="templates")
 @home_bp.route("/")
 def home_page():
     logger.info("home page hit")
-    return render_template("home.html")
+    db_call = data_handler.database()
+    budgets = db_call.get_budgets()
+    return render_template("home.html", budgets=budgets)
 
 
 @home_bp.route("/submit", methods=["POST"])

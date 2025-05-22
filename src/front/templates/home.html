@@ -15,5 +15,11 @@
         <input type="submit" value="Submit" />
     </form>
 </div>
-
+<div>
+    <p>
+    {% for budget in budgets %}
+- {{ budget[0] }}<br>
+    {% endfor %}
+    </p>
+</div>
 {% endblock %}

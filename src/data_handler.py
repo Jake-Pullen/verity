@@ -7,12 +7,15 @@ logger = logging.getLogger(__name__)
 
 
 class database:
-    "basic Database class to start some development"
+    """basic Database class to start some development
+    Will need a proper refactor once basic functions are in and working
+    This is POC
+    """
 
     def __init__(self) -> None:
         self.verity_config = VerityConfig()
-        self.database = self.verity_config.DATABASE
         self.schema = self.verity_config.DATABASE_SCHEMA
+        self.database = self.verity_config.DATABASE
 
     def execute_sql(self, sql_statement: str, return_id: bool = False) -> (bool, int):
         "send the query here, returns true if successful, false if fail"
@@ -36,7 +39,27 @@ class database:
             is_success = False
         finally:
             connection.close()
-            return (is_success, new_id)
+            if return_id:
+                return (is_success, new_id)
+            else:
+                return is_success
+
+    def read_database(self, sql_statement: str):
+        "reads the database query and returns the results"
+        logging.debug(f"received request to read {sql_statement}")
+        results = 0
+        try:
+            connection = sqlite3.connect(self.database)
+            logging.debug("opened connection to database")
+            cursor = connection.cursor()
+            results = cursor.execute(sql_statement, {})
+            results = results.fetchall()
+            logging.debug(f"query returned: {results}")
+        except Exception as e:
+            logging.error(f"Read error occured: {e}")
+        finally:
+            connection.close()
+            return results
 
     @staticmethod
     def _build_column(column: dict) -> str:
@@ -170,3 +193,8 @@ class database:
             except Exception as e:
                 logger.error(f"failed to close connection message: {e}")
                 return 0
+
+    def get_budgets(self) -> list:
+        get_budget_sql = "SELECT name FROM budget"
+        budgets = self.read_database(get_budget_sql)
+        return budgets
