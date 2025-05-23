@@ -1,5 +1,3 @@
-import os
-import sqlite3
 import pytest
 
 from src import data_handler
