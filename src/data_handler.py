@@ -14,8 +14,11 @@ class database:
         self.verity_config = config
         self.schema = self.verity_config.DATABASE_SCHEMA
         self.database = self.verity_config.DATABASE
+        logger.info(f"using database {self.database}")
 
-    def execute_sql(self, sql_statement: str, return_id: bool = False) -> (bool, int):
+    def execute_sql(
+        self, sql_statement: str, params: tuple = (), return_id: bool = False
+    ) -> (bool, int):
         "send the query here, returns true if successful, false if fail"
         logging.debug(f"received request to execute {sql_statement}")
         new_id: int = 0
@@ -27,7 +30,7 @@ class database:
             )
             logging.debug("opened connection to database")
             cursor = connection.cursor()
-            cursor.execute(sql_statement, {})
+            cursor.execute(sql_statement, params)
             connection.commit()
             if return_id:
                 new_id = cursor.lastrowid
@@ -42,15 +45,17 @@ class database:
             else:
                 return is_success
 
-    def read_database(self, sql_statement: str):
+    def read_database(self, sql_statement: str, params: tuple = ()) -> list:
         "reads the database query and returns the results"
-        logging.debug(f"received request to read {sql_statement}")
-        results = 0
+        logging.debug(
+            f"Attempting to read {sql_statement}, with parameters as {params}"
+        )
+        results = []
         try:
             connection = sqlite3.connect(self.database)
             logging.debug("opened connection to database")
             cursor = connection.cursor()
-            results = cursor.execute(sql_statement, {})
+            results = cursor.execute(sql_statement, params)
             results = results.fetchall()
             logging.debug(f"query returned: {results}")
         except Exception as e:
@@ -61,9 +66,7 @@ class database:
 
     @staticmethod
     def _build_column(column: dict) -> str:
-        logging.debug(
-            f"building column {column}"
-        )
+        logging.debug(f"building column {column}")
         name = column["column_name"]
         is_pk = column["is_pk"]
         is_fk = column.get("is_fk")
@@ -78,7 +81,6 @@ class database:
             column_string += " NOT NULL"
         return column_string
 
-
     def _add_table_to_db(self, table: dict) -> bool:
         "Creates the table in the verity database, based on the schema yaml"
         sql = f"""CREATE TABLE IF NOT EXISTS {table["table_name"]} (
@@ -89,9 +91,10 @@ class database:
         sql += ",\n".join(columns)
         sql += "\n);"
         success_status = False
-        try:
+        try:  # TODO: Change to use execute_sql method
             connection = sqlite3.connect(self.database)
             cursor = connection.cursor()
+            logger.debug(f"Creating table {sql}")
             cursor.execute(sql)
             connection.commit()
             success_status = True
@@ -147,10 +150,9 @@ class database:
                 logger.error(e)
 
     def add_user_name(self, user_name: str) -> int:
+        # TODO: Change to use execute_sql method
         "takes user name string, returns user id"
-        logger.debug(
-            f"attempting to insert values into user table {user_name}"
-        )
+        logger.debug(f"attempting to insert values into user table {user_name}")
         try:
             connection = sqlite3.connect(self.database)
             logger.debug("connection to db open")
@@ -187,3 +189,18 @@ class database:
         get_user_sql = "SELECT name FROM user"
         users = self.read_database(get_user_sql)
         return users
+
+    def add_new_category(
+        self, category_name: str, user_id: int, parent_category: int = None
+    ):
+        sql = """INSERT INTO category (user_id, name, parent_id)
+        VALUES (?,?,?)
+        """
+        params = (user_id, category_name, parent_category)
+        success, category_id = self.execute_sql(
+            sql_statement=sql, params=params, return_id=True
+        )
+        if not success:
+            logging.error(f"Failed to add {category_name} as a category")
+
+        return category_id
