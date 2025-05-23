@@ -61,23 +61,23 @@ class database:
 
     @staticmethod
     def _build_column(column: dict) -> str:
+        logging.debug(
+            f"building column {column}"
+        )
         name = column["column_name"]
         is_pk = column["is_pk"]
+        is_fk = column.get("is_fk")
         datatype = column["datatype"]
         nullable = column["nullable"]
         column_string = f"{name} {datatype}"
         if is_pk:
             column_string += " PRIMARY KEY AUTOINCREMENT"
+        if is_fk:
+            column_string += f" REFERENCES {column["is_fk"]} "
         if not nullable:
             column_string += " NOT NULL"
         return column_string
 
-    @staticmethod
-    def _build_foreign_key(key: dict) -> str:
-        column = key["column"]
-        ref_table = key["references"]
-        ref_column = key["reference_column"]
-        return f"FOREIGN KEY ({column}) REFERENCES {ref_table} ({ref_column})"
 
     def _add_table_to_db(self, table: dict) -> bool:
         "Creates the table in the verity database, based on the schema yaml"
@@ -87,10 +87,6 @@ class database:
         for column in table["table_columns"]:
             columns.append(self._build_column(column))
         sql += ",\n".join(columns)
-        if table.get("table_foreign_keys", None):
-            sql += ",\n"
-            for key in table["table_foreign_keys"]:
-                sql += f"{self._build_foreign_key(key)}"
         sql += "\n);"
         success_status = False
         try:

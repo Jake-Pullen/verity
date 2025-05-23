@@ -32,12 +32,12 @@ tables:
       - column_name: user_id
         is_pk: False
         datatype: INTEGER
-        is_fk: user.id
+        is_fk: user
         nullable: False
       - column_name: type_id
         is_pk: False
         datatype: INTEGER
-        is_fk: account_type.id
+        is_fk: account_type
         nullable: False
       - column_name: name
         is_pk: False
@@ -75,7 +75,7 @@ tables:
       - column_name: user_id
         is_pk: False
         datatype: INTEGER
-        is_fk: user.id
+        is_fk: user
         nullable: False
       - column_name: name
         is_pk: False
@@ -88,7 +88,7 @@ tables:
       - column_name: parent_id
         is_pk: False
         datatype: INTEGER
-        is_fk: category.id
+        is_fk: category
         nullable: True
 
   - table_name: transaction_log
@@ -100,22 +100,22 @@ tables:
       - column_name: account_id
         is_pk: False
         datatype: INTEGER
-        is_fk: account.id
+        is_fk: account
         nullable: False
       - column_name: party_id
         is_pk: False
         datatype: INTEGER
-        is_fk: party.id
+        is_fk: party
         nullable: True
       - column_name: type_id
         is_pk: False
         datatype: INTEGER
-        is_fk: transaction_type.id
+        is_fk: transaction_type
         nullable: False
       - column_name: category_id
         is_pk: False
         datatype: INTEGER
-        is_fk: category.id
+        is_fk: category
         nullable: True
       - column_name: amount
         is_pk: False
