@@ -27,7 +27,7 @@ if __name__ == "__main__":
     logger.info("app starting")
 
     # database initialise
-    verity = database()
+    verity = database(verity_config)
     verity.build_database()
 
     # app initialise

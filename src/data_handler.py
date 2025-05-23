@@ -1,6 +1,5 @@
 import sqlite3
 import logging
-from config import VerityConfig
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -12,8 +11,8 @@ class database:
     This is POC
     """
 
-    def __init__(self) -> None:
-        self.verity_config = VerityConfig()
+    def __init__(self, config) -> None:
+        self.verity_config = config
         self.schema = self.verity_config.DATABASE_SCHEMA
         self.database = self.verity_config.DATABASE
 
@@ -29,7 +28,7 @@ class database:
             )
             logging.debug("opened connection to database")
             cursor = connection.cursor()
-            cursor.execute(sql=sql_statement)
+            cursor.execute(sql_statement, {})
             connection.commit()
             if return_id:
                 new_id = cursor.lastrowid
