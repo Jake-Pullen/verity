@@ -202,5 +202,4 @@ class database:
         )
         if not success:
             logging.error(f"Failed to add {category_name} as a category")
-
         return category_id

@@ -7,7 +7,7 @@ from src.config import VerityConfig
 @pytest.fixture
 def test_db_call():
     config = VerityConfig()
-    config.DATABASE = "test_db"
+    config.DATABASE = "test_db.db"
     db_call = data_handler.database(config)
     db_call.build_database()
     yield db_call
@@ -46,4 +46,15 @@ def test_get_users(test_db_call):
 
 
 def add_category(test_db_call):
-    pass
+    category_name = "Test Category"
+    user_id = 1
+    category_id = test_db_call.add_new_category(category_name, user_id)
+    assert category_id is not None
+
+
+def add_child_category(test_db_call):
+    category_name = "Test Child Category"
+    user_id = 1
+    parent_category = 1
+    category_id = test_db_call.add_new_category(category_name, user_id, parent_category)
+    assert category_id is not None
