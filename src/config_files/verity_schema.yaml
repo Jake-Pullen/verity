@@ -1,6 +1,7 @@
 database_name: verity
 tables:
-  - table_name: budget
+
+  - table_name: user
     table_columns:
       - column_name: id
         is_pk: True
@@ -10,11 +11,8 @@ tables:
         is_pk: False
         datatype: TEXT
         nullable: False
-      - column_name: created_date
-        is_pk: False
-        datatype: TEXT
-        nullable: False
-  - table_name: account_types
+
+  - table_name: account_type
     table_columns:
       - column_name: id
         is_pk: True
@@ -24,59 +22,28 @@ tables:
         is_pk: False
         datatype: TEXT
         nullable: False
-      - column_name: created_date
-        is_pk: False
-        datatype: TEXT
-        nullable: False
+
   - table_name: account
     table_columns:
       - column_name: id
         is_pk: True
         datatype: INTEGER
         nullable: False
-      - column_name: name
+      - column_name: user_id
         is_pk: False
         datatype: INTEGER
+        is_fk: user.id
         nullable: False
-      - column_name: budget_id
+      - column_name: type_id
         is_pk: False
         datatype: INTEGER
-        is_fk: budget.id
+        is_fk: account_type.id
         nullable: False
-      - column_name: account_type
-        is_pk: False
-        datatype: INTEGER
-        nullable: False
-    table_foreign_keys:
-      - column: account_type
-        references: account
-        reference_column: id
-  - table_name: category
-    table_foreign_keys:
-      - column: parent_category
-        references: category #self join for hierarchy
-        reference_column: id
-    table_columns:
-      - column_name: id
-        is_pk: True
-        datatype: INTEGER
-        nullable: False
-      - column_name: parent_category
-        is_pk: False
-        datatype: INTEGER
-        nullable: True
       - column_name: name
         is_pk: False
         datatype: TEXT
         nullable: False
-      - column_name: created_date
-        is_pk: False
-        datatype: TEXT
-        nullable: False
-      - column_name: current_money_assigned
-        is_pk: False
-        datatype: INTEGER
-        nullable: False
+
   - table_name: party
     table_columns:
       - column_name: id
@@ -87,47 +54,78 @@ tables:
         is_pk: False
         datatype: TEXT
         nullable: False
-      - column_name: last_category
-        is_pk: False
-        datatype: TEXT
-        nullable: True
-    table_foreign_keys:
-      - column: last_category
-        references: category #self join for hierarchy
-        reference_column: id
-  - table_name: movement
+
+  - table_name: transaction_type
     table_columns:
       - column_name: id
         is_pk: True
         datatype: INTEGER
         nullable: False
-      - column_name: date
+      - column_name: name
         is_pk: False
         datatype: TEXT
         nullable: False
+
+  - table_name: category
+    table_columns:
+      - column_name: id
+        is_pk: True
+        datatype: INTEGER
+        nullable: False
+      - column_name: user_id
+        is_pk: False
+        datatype: INTEGER
+        is_fk: user.id
+        nullable: False
+      - column_name: name
+        is_pk: False
+        datatype: TEXT
+        nullable: False
+      - column_name: budget_value
+        is_pk: False
+        datatype: REAL
+        nullable: True
+      - column_name: parent_id
+        is_pk: False
+        datatype: INTEGER
+        is_fk: category.id
+        nullable: True
+
+  - table_name: transaction_log
+    table_columns:
+      - column_name: id
+        is_pk: True
+        datatype: INTEGER
+        nullable: False
+      - column_name: account_id
+        is_pk: False
+        datatype: INTEGER
+        is_fk: account.id
+        nullable: False
+      - column_name: party_id
+        is_pk: False
+        datatype: INTEGER
+        is_fk: party.id
+        nullable: True
+      - column_name: type_id
+        is_pk: False
+        datatype: INTEGER
+        is_fk: transaction_type.id
+        nullable: False
+      - column_name: category_id
+        is_pk: False
+        datatype: INTEGER
+        is_fk: category.id
+        nullable: True
       - column_name: amount
         is_pk: False
-        datatype: INTEGER
+        datatype: REAL
         nullable: False
-      - column_name: category
+      - column_name: notes
         is_pk: False
-        datatype: INTEGER
-        nullable: False
-      - column_name: account
+        datatype: TEXT
+        nullable: True
+      - column_name: datetime
         is_pk: False
-        datatype: INTEGER
+        datatype: TEXT
         nullable: False
-      - column_name: party
-        is_pk: False
-        datatype: INTEGER
-        nullable: False
-    table_foreign_keys:
-      - column: category
-        references: category #self join for hierarchy
-        reference_column: id
-      - column: account
-        references: account
-        reference_column: id
-      - column: party
-        references: party
-        reference_column: id

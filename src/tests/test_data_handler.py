@@ -13,11 +13,10 @@ def test_db_call():
 
 
 def test_execute_sql_success(test_db_call):
-    sql_statement = """INSERT INTO budget (
-    name,
-    created_date
+    sql_statement = """INSERT INTO user (
+    name
     )
-    VALUES ('a_budget_name','2025-05-23 09:04:00')
+    VALUES ('a_user_name')
     """
     result = test_db_call.execute_sql(sql_statement)
     assert result
@@ -33,7 +32,7 @@ def test_execute_sql_error(test_db_call):
 
 def test_read_database(test_db_call):
     # Test reading database data
-    sql_statement = "SELECT name FROM budget"
+    sql_statement = "SELECT name FROM user"
     results = test_db_call.read_database(sql_statement)
     assert isinstance(results, list)
     # Check the contents of the list
@@ -41,20 +40,20 @@ def test_read_database(test_db_call):
     # self.assertIsInstance(results[0], str)
 
 
-def test_add_budget_name(test_db_call):
-    # Test adding a new budget name
-    budget_name = "Test Budget"
-    budget_id = test_db_call.add_budget_name(budget_name)
-    assert budget_id is not None
-    # Check if the budget name was actually added
+def test_add_user_name(test_db_call):
+    # Test adding a new user name
+    user_name = "Test user"
+    user_id = test_db_call.add_user_name(user_name)
+    assert user_id is not None
+    # Check if the user name was actually added
     # You might need to query the database to verify
-    # self.assertEqual(budget_id, 1)
+    # self.assertEqual(user_id, 1)
 
 
-def test_get_budgets(test_db_call):
-    # Test getting budgets
-    budgets = test_db_call.get_budgets()
-    assert isinstance(budgets, list)
+def test_get_users(test_db_call):
+    # Test getting users
+    users = test_db_call.get_users()
+    assert isinstance(users, list)
     # Check the contents of the list
-    # self.assertIsNotNone(budgets)
-    # self.assertIsInstance(budgets[0], str)
+    # self.assertIsNotNone(users)
+    # self.assertIsInstance(users[0], str)

@@ -15,26 +15,26 @@ verity_config = VerityConfig()
 def home_page():
     logger.info("home page hit")
     db_call = data_handler.database(verity_config)
-    budgets = db_call.get_budgets()
-    return render_template("home.html", budgets=budgets)
+    users = db_call.get_users()
+    return render_template("home.html", users=users)
 
 
 @home_bp.route("/submit", methods=["POST"])
-def submit_budget_name():
-    budget_name = request.form.get("budgetName")
+def submit_user_name():
+    user_name = request.form.get("userName")
     logger.debug(f"Request Received: {request.form}")
-    if budget_name:
-        logger.info(f"User submitted new budget name: {budget_name}")
-        session["budget_name"] = budget_name
+    if user_name:
+        logger.info(f"User submitted new user name: {user_name}")
+        session["user_name"] = user_name
         db_call = data_handler.database(verity_config)
-        budget_id = db_call.add_budget_name(budget_name)
-        if budget_id == 0:
+        user_id = db_call.add_user_name(user_name)
+        if user_id == 0:
             # db entry failed, throw error message
-            flash("Budget Name not saved, please check the logs", "error")
+            flash("user Name not saved, please check the logs", "error")
             return redirect(url_for("home.home_page"))
-        session["budget_id"] = budget_id
-        flash("Budget name saved!", "success")
+        session["user_id"] = user_id
+        flash("user name saved!", "success")
         return redirect(url_for("home.home_page"))
     else:
-        flash("Please enter a budget name.", "error")
+        flash("Please enter a user name.", "error")
         return redirect(url_for("home.home_page"))

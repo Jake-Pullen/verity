@@ -2,23 +2,23 @@
 %}
 <h1>Home of Verity</h1>
 <div>
-    <form action="{{url_for('home.submit_budget_name')}}" method="POST">
-        <p>New Budget Name:</p>
+    <form action="{{url_for('home.submit_user_name')}}" method="POST">
+        <p>New User:</p>
         <input
             type="text"
-            id="budgetName"
-            name="budgetName"
+            id="userName"
+            name="userName"
             rows="4"
             cols="50"
-            placeholder="Enter Budget Name Here"
+            placeholder="Enter User Name Here"
         />
         <input type="submit" value="Submit" />
     </form>
 </div>
 <div>
     <p>
-    {% for budget in budgets %}
-- {{ budget[0] }}<br>
+    {% for user in users %}
+- {{ user[0] }}<br>
     {% endfor %}
     </p>
 </div>
