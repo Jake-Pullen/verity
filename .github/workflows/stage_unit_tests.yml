@@ -1,13 +1,15 @@
 name: Unit Tests - Stage Branch
 
 on:
-  push:
+  pull_request:
+    types: [opened , reopene, edited]
     branches:
-      - stage
+      - 'stage'
+
   workflow_dispatch: # Allows manual triggering from the UI
 
 jobs:
-  pydantic_tests:
+  Stage_Pull_Request_Unit_Tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

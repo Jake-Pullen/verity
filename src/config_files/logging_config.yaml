@@ -11,7 +11,7 @@ formatters:
 handlers:
   stderr:
     class: logging.StreamHandler
-    level: INFO
+    level: DEBUG
     formatter: nodate
     stream: ext://sys.stdout
   file:

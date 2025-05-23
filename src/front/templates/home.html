@@ -1,5 +1,25 @@
 {% extends "base.html" %} {% block title %} Home {% endblock %} {% block content
 %}
 <h1>Home of Verity</h1>
-<p>Current Directory: {{ cwd }}</p>
+<div>
+    <form action="{{url_for('home.submit_budget_name')}}" method="POST">
+        <p>New Budget Name:</p>
+        <input
+            type="text"
+            id="budgetName"
+            name="budgetName"
+            rows="4"
+            cols="50"
+            placeholder="Enter Budget Name Here"
+        />
+        <input type="submit" value="Submit" />
+    </form>
+</div>
+<div>
+    <p>
+    {% for budget in budgets %}
+- {{ budget[0] }}<br>
+    {% endfor %}
+    </p>
+</div>
 {% endblock %}
