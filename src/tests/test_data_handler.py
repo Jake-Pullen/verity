@@ -7,7 +7,7 @@ from src.config import VerityConfig
 @pytest.fixture
 def test_db_call():
     config = VerityConfig()
-    config.DATABASE = ":memory:"
+    config.DATABASE = "test_db"
     db_call = data_handler.database(config)
     db_call.build_database()
     yield db_call
