@@ -14,7 +14,7 @@ def test_db_call():
 
 
 def test_execute_sql_success(test_db_call):
-    sql_statement = """INSERT INTO user (name)
+    sql_statement = """INSERT INTO user(name)
     VALUES (?)
     """
     value = ("a_user_name",)
