@@ -30,7 +30,7 @@ def submit_user_name():
         user_id = db_call.add_user_name(user_name)
         if user_id == 0:
             # db entry failed, throw error message
-            flash("user Name not saved, please check the logs", "error")
+            flash("User Name not saved, please check the logs", "error")
             return redirect(url_for("home.home_page"))
         session["user_id"] = user_id
         flash("user name saved!", "success")
