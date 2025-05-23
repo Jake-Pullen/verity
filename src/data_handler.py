@@ -1,6 +1,5 @@
 import sqlite3
 import logging
-from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -151,14 +150,10 @@ class database:
             except Exception as e:
                 logger.error(e)
 
-    def add_budget_name(self, budget_name: str) -> int:
-        "takes budget name string, returns budget id"
-        now = datetime.now()
-        formatted_datetime = now.strftime("%Y-%m-%d %H:%M:%S")
+    def add_user_name(self, user_name: str) -> int:
+        "takes user name string, returns user id"
         logger.debug(
-            f"attempting to insert values into budget table {budget_name} | {
-                formatted_datetime
-            }"
+            f"attempting to insert values into user table {user_name}"
         )
         try:
             connection = sqlite3.connect(self.database)
@@ -166,34 +161,33 @@ class database:
             cursor = connection.cursor()
             logger.debug("cursor activated")
             cursor.execute(
-                """INSERT INTO budget (
-            name,
-            created_date
+                """INSERT INTO user (
+            name
             )
-            VALUES (?,?)
+            VALUES (?)
             """,
-                (budget_name, formatted_datetime),
+                (user_name,),
             )
             logger.debug("cursor executed")
             connection.commit()
-            budget_id = cursor.lastrowid
-            logger.debug(f"insert attempt seems successful, budget id is {budget_id}")
+            user_id = cursor.lastrowid
+            logger.debug(f"insert attempt seems successful, user id is {user_id}")
 
-            if budget_id is None:
-                budget_id = 0
+            if user_id is None:
+                user_id = 0
         except Exception as e:
-            logger.error(f"Failed to insert budget name, error: {e}")
-            budget_id = 0
+            logger.error(f"Failed to insert user name, error: {e}")
+            user_id = 0
         finally:
             try:
                 connection.close()
                 logger.debug("connection to db closed")
-                return budget_id
+                return user_id
             except Exception as e:
                 logger.error(f"failed to close connection message: {e}")
                 return 0
 
-    def get_budgets(self) -> list:
-        get_budget_sql = "SELECT name FROM budget"
-        budgets = self.read_database(get_budget_sql)
-        return budgets
+    def get_users(self) -> list:
+        get_user_sql = "SELECT name FROM user"
+        users = self.read_database(get_user_sql)
+        return users
