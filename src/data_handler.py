@@ -73,7 +73,7 @@ class database:
         if is_pk:
             column_string += " PRIMARY KEY AUTOINCREMENT"
         if is_fk:
-            column_string += f" REFERENCES {column["is_fk"]} "
+            column_string += f" REFERENCES {column['is_fk']} "
         if not nullable:
             column_string += " NOT NULL"
         return column_string
